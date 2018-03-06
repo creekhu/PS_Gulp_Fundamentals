@@ -1,0 +1,98 @@
+Grunt vs Gulp
+
+- Grunt
+    1. Configuration over code
+    2. File based
+
+    Flow: File System -> Read Files -> Modify -> Write files -> Temp -> Read files -> Modify ... -> Final Dest
+
+- Gulp
+    1. Code over Configuration
+    2. Stream based
+    3. Use node more readily
+
+    Flow: File system -> Read files -> Modify -> Modify ... -> Write Files -> Dest
+
+
+4 API for Gulp
+
+1. gulp.task
+
+    - Tests and linting
+    - Optimization
+    - Serve App
+
+    gulp.task(name, [other gulp task as dependency], func)
+
+    note: other dependencies will run in parallel before the current task
+
+    eg.
+
+    gulp.task('js', ['jscs', 'jshint'], () => {
+        return gulp
+            .src('./src/**/*.js')
+            .pipe(concat('all.js'))
+            .pipe(uglify())
+            .pipe(gulp.dest('./build/'));
+    });
+
+2. gulp.src
+
+    gulp.src(glob, [options])
+
+    options.base:
+        1. Defines how much of the path to retain
+        2. Defaults to everything before the glob
+
+    gulp.task('min1', () => {
+        return gulp
+            .src('./src/app/admin/admin.js', { base: './src/'})
+            .pipe(uglify())
+            .pipe(gulp.dest('./build/'));
+    });
+
+    * Write ./src/app/admin/admin.js to ./build/app/admin/admin.js
+
+    gulp.task('min2', () => {
+        return gulp
+            .src('./src/app/admin/admin.js')
+            .pipe(uglify())
+            .pipe(gulp.dest('./build/'));
+    });
+
+    * Stay the same
+
+3. gulp.dest
+
+    gulp.dest(folder, [options])
+
+4. gulp.watch
+
+    gulp.watch(glob, [options], tasks)
+
+    run one or more tasks when a file matched by the glob changes
+    Array of task names
+
+    gulp.task('lint-watcher', () => {
+        gulp.watch('./src/**/*.js', [
+            'jshint',
+            'jscs'
+        ]);
+    });
+
+    Or you can pass a call-back function
+    gulp.task('lint-watcher', () => {
+        gulp.watch('./src/**/*.less', event => {
+            console.log('watched event' + event.type + ' for ' + event.path);
+        });
+    });
+
+Difference between package dependencies
+
+- dependencies
+
+    1. Needed at run time such as Express, Angular, Bootstrap
+
+- devDependencies
+
+    1. Needed during development such as Concat, JSHint, Uglify
