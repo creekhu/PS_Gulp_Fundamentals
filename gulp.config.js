@@ -22,6 +22,9 @@ module.exports = function() {
         client: client,
         temp: temp,
         css: temp + 'styles.css',
+        build: './build/',
+        fonts: './bower_components/font-awesome/fonts/**/*.*',
+        images: client + 'images/**/*.*',
 
         /* Bower and NPM locations */
         bower: {

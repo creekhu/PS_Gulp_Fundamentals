@@ -37,11 +37,6 @@ gulp.task('styles', ['clean-styles'], function() {
         .pipe(gulp.dest(config.temp));
 });
 
-gulp.task('clean-styles', function() {
-    var path = [config.temp + '**/*.css'];
-    clean(path);
-});
-
 gulp.task('less-watcher', function() {
     gulp.watch([config.less], ['styles']);
 });
@@ -101,6 +96,48 @@ gulp.task('serve-dev', function() {
         });
 });
 
+gulp.task('task-list', $.taskListing);
+
+gulp.task('fonts', ['clean-fonts'], function() {
+    log('Copying fonts');
+
+    return gulp
+        .src(config.fonts)
+        .pipe(gulp.dest(config.build + 'fonts'));
+});
+
+gulp.task('images', ['clean-images'], function() {
+    log('Copying and compressing images');
+
+    return gulp
+        .src(config.images)
+        .pipe($.imagemin({ optimizationLevel: 4 }))
+        .pipe(gulp.dest(config.build + 'images'));
+});
+
+/* Clean tasks */
+
+gulp.task('clean', function() {
+    var delconfig = [].concat(config.build, config.temp);
+    log('Cleaning: ' + $.util.colors.blue(delconfig));
+    del(delconfig);
+});
+
+gulp.task('clean-styles', function() {
+    var path = config.temp + '**/*.css';
+    clean(path);
+});
+
+gulp.task('clean-fonts', function() {
+    var path = config.build + 'fonts/**/*.*';
+    clean(path);
+});
+
+gulp.task('clean-images', function() {
+    var path = config.temp + 'images/**/*.css';
+    clean(path);
+});
+
 /* Helper functions */
 function changeEvent(event) {
     var srcPattern = new RegExp('/.*(?=/' + config.source + ')/');
@@ -145,7 +182,7 @@ function startBrowserSync() {
 }
 
 function clean(path) {
-    log('Cleaning' + $.util.colors.blue(path[0]));
+    log('Cleaning' + $.util.colors.blue(path));
     del(path).then(function(path) {
         console.log('Deleted path is' + path);
     });
