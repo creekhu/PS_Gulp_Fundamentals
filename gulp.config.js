@@ -22,9 +22,22 @@ module.exports = function() {
         client: client,
         temp: temp,
         css: temp + 'styles.css',
+        htmltemplates: clientApp + '**/*.html',
         build: './build/',
         fonts: './bower_components/font-awesome/fonts/**/*.*',
         images: client + 'images/**/*.*',
+
+        /**
+         * tempate cache
+         */
+        templateCache: {
+            file: 'templates.js',
+            options: {
+                module: 'app.core',
+                standAlone: false,
+                root: 'app/'
+            }
+        },
 
         /* Bower and NPM locations */
         bower: {

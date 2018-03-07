@@ -115,6 +115,23 @@ gulp.task('images', ['clean-images'], function() {
         .pipe(gulp.dest(config.build + 'images'));
 });
 
+/**
+ * Use template cache to reduce the number of HTTP requests
+ */
+
+gulp.task('templatecache', ['clean-code'], function() {
+    log('Creating AngularJS $templateCache');
+
+    return gulp
+        .src(config.htmltemplates)
+        .pipe($.minifyHtml({ empty: true }))
+        .pipe($.angularTemplatecache(
+            config.templateCache.file,
+            config.templateCache.options
+        ))
+        .pipe(gulp.dest(config.temp));
+});
+
 /* Clean tasks */
 
 gulp.task('clean', function() {
@@ -136,6 +153,16 @@ gulp.task('clean-fonts', function() {
 gulp.task('clean-images', function() {
     var path = config.temp + 'images/**/*.css';
     clean(path);
+});
+
+gulp.task('clean-code', function() {
+    var files = [].concat(
+        config.temp + '**/*.js',
+        config.build + '**/*.html',
+        config.build + 'js/**/*.js'
+    );
+
+    clean(files);
 });
 
 /* Helper functions */
