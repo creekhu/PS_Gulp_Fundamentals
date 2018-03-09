@@ -21,6 +21,7 @@ module.exports = function() {
         server: server,
         client: client,
         temp: temp,
+        html: clientApp + '**/*.html',
         css: temp + 'styles.css',
         htmltemplates: clientApp + '**/*.html',
         build: './build/',
